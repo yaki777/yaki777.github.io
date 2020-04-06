@@ -42,7 +42,7 @@
             <div class="form-group">
               <label for="email">用户名</label>
 
-              <input id="email" class="form-control" name="email" value="" required autofocus>
+              <input id="user" class="form-control" name="email" value="" required autofocus>
             </div>
 
             <div class="form-group">
@@ -78,9 +78,10 @@
         </button>
       </div>
       <div id="register-body" class="modal-body">
+        <input id="email" class="form-control" name="email" value="" required autofocus>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">确定</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="register()">确定</button>
       </div>
     </div>
   </div>
@@ -99,7 +100,7 @@
     return decodeURI(results[1]) || 0;
   };
   window.onload = function (e) {
-    $("#login").html("系统维护...").prop("disabled",false);
+    $("#login").html("登录").prop("disabled",false);
     var user = $.urlParam("user");
     var pass = $.urlParam("pass");
     var code = $.urlParam("code");
@@ -117,7 +118,7 @@
   };
 
   function login() {
-    var user = $('#email').val();
+    var user = $('#user').val();
     var pass = $('#password').val();
     $.ajax({
       url: encodeURI("http://61.175.122.154:7988/wp-json/jwt-auth/v1/token"),
@@ -149,7 +150,7 @@
     $("#login").prop('disabled', true);
   }
   function register(){
-    var user = $('#username').val();
+    var user = $('#user').val();
     var pass = $('#password').val();
     var email = $('#email').val();
     if(user.length===0 || pass.length===0 || email.length===0){

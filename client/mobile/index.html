@@ -67,6 +67,24 @@
     </div>
   </div>
 </section>
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">重新输入邮箱</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="register-body" class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/my-login.js"></script>
@@ -116,13 +134,46 @@
         console.log("success!");
       },
       error: function (data) {
-        alert("登录失败:" + JSON.stringify(data));
-        $("#login").prop('disabled', false);
+        if(data.readyState===0){
+          login();
+        }else {
+          if(data['responseJSON']['message'].startsWith('Unknown username')){
+           $("#register-modal").modal();
+          }else {
+            alert("登录失败,请检查用户名密码是否正确");
+            $("#login").prop('disabled', false);
+          }
+        }
       }
     });
     $("#login").prop('disabled', true);
   }
-
+  function register(){
+    var user = $('#username').val();
+    var pass = $('#password').val();
+    var email = $('#email').val();
+    if(user.length===0 || pass.length===0 || email.length===0){
+      alert("信息不完整");
+      return;
+    }
+    $.ajax({
+      url: encodeURI("http://61.175.122.154:7988/api/get_nonce/?controller=user&method=register"),
+      type: 'GET',
+      dataType: 'json',
+      contentType: "application/json; charset=utf-8"
+    }).always(function(res){
+      var nonce = res.nonce;
+      $.ajax({
+        url: encodeURI("http://61.175.122.154:7988/api/user/register/?insecure=cool&nonce="+nonce+"&username=" +user
+          +"&user_pass="+pass+"&email="+email),
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+      }).always(function(res){
+        login();
+      });
+    });
+  }
   function redirect(uri) {
     if (navigator.userAgent.match(/Android/i))
       document.location = uri;

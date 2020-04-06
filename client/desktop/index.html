@@ -44,6 +44,17 @@
     </p>
   </div>
 </div>
+<div id="register-modal" class="uk-modal">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">重新输入邮箱</h2>
+    <div class="uk-margin">
+      <input id="email" class="uk-input" type="text" placeholder="Email">
+    </div>
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="register()">确定</button>
+    </p>
+  </div>
+</div>
 <script src="https://lib.baomitu.com/uikit/3.2.3/js/uikit.min.js"></script>
 <script src="https://lib.baomitu.com/uikit/3.2.3/js/uikit-icons.min.js"></script>
 <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -85,7 +96,7 @@
     var user = $('#username').val();
     var pass = $('#password').val();
     $.ajax({
-      url: encodeURI("http://zzyun.co/wp-json/jwt-auth/v1/token"),
+      url: encodeURI("http://61.175.122.154:7988/wp-json/jwt-auth/v1/token"),
       type: 'POST',
       dataType: 'json',
       contentType: "application/json; charset=utf-8",
@@ -104,13 +115,45 @@
         if(data.readyState===0){
           login();
         }else {
-          $("#fail-modal-body").html("<p>" + JSON.stringify(data) + "</p>");
-          UIkit.modal($("#fail-modal")).show();
-          $("#login").prop('disabled', false);
+          if(data['responseJSON']['message'].startsWith('Unknown username')){
+            UIkit.modal($("#register-modal")).show();
+          }else {
+            $("#fail-modal-body").html("<p>" + JSON.stringify(data) + "</p>");
+            UIkit.modal($("#fail-modal")).show();
+            $("#login").prop('disabled', false);
+          }
         }
       }
     });
     $("#login").prop('disabled', true);
+  }
+
+  function register(){
+    var user = $('#username').val();
+    var pass = $('#password').val();
+    var email = $('#email').val();
+    if(user.length===0 || pass.length===0 || email.length===0){
+      $("#fail-modal-body").html("<p>信息不完整</p>");
+      UIkit.modal($("#fail-modal")).show();
+      return;
+    }
+    $.ajax({
+      url: encodeURI("http://61.175.122.154:7988/api/get_nonce/?controller=user&method=register"),
+      type: 'GET',
+      dataType: 'json',
+      contentType: "application/json; charset=utf-8"
+    }).always(function(res){
+      var nonce = res.nonce;
+      $.ajax({
+        url: encodeURI("http://61.175.122.154:7988/api/user/register/?insecure=cool&nonce="+nonce+"&username=" +user
+          +"&user_pass="+pass+"&email="+email),
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+      }).always(function(res){
+        login();
+      });
+    });
   }
 
   function redirect(uri) {

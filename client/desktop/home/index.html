@@ -110,13 +110,13 @@
     var json = JSON.parse(atob(code));
     var user = json['user'];
     var pass = json['pass'];
-    $.get(encodeURI("http://localhost:1078/start?center_host=zzyun.co&center_port=1777&user=" + user + "&pass=" + pass), function (data) {
+    $.get(encodeURI("http://localhost:1078/start?user=" + user + "&pass=" + pass), function (data) {
       if (data !== '') {
         alert(data)
       }
     });
     $.ajax({
-      url: encodeURI("http://zzyun.co/wp-json/wp/v2/posts?categories=17"),
+      url: encodeURI("http://61.172.122.154:7988/wp-json/wp/v2/posts?categories=17"),
       type: 'GET',
       dataType: 'json',
       headers:{

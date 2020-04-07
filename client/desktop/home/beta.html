@@ -149,6 +149,7 @@
       url:"http://localhost:1078/test/"+type,
       type: 'POST',
       dataType: 'json',
+      contentType: 'application/json',
       data: JSON.stringify(nodes)
     }).always(function(res){
       if(res.status===1){

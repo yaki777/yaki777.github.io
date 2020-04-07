@@ -143,7 +143,7 @@
   }
 
   function nodeTest(name,host,port,type,nodes){
-    $("#connecting-modal-body").html("正在寻找合适的中继通道<div uk-spinner></div>");
+    $("#connecting-modal-body").html("正在寻找合适的中继通道,大约需要10s左右<div uk-spinner></div>");
     UIkit.modal($("#connecting-modal")).show();
     $.ajax({
       url:"http://localhost:1078/test/"+type,

@@ -154,7 +154,7 @@
       if(res.status===1){
         connect(name,host,port,type,res.ip);
       }else{
-        $("#connecting-modal-body").html("无可用的中继通道");
+        $("#connecting-modal-body").html("无可用的中继通道("+JSON.stringify(res)+")");
       }
     })
   }

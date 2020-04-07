@@ -64,6 +64,17 @@
 
   </div>
 </div>
+<div id="finding-modal" class="uk-modal">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">提示</h2>
+    <div id="finding-modal-body">
+      正在寻找合适的中继通道<div uk-spinner></div>
+    </div>
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">确定</button>
+    </p>
+  </div>
+</div>
 <div id="connecting-modal" class="uk-modal">
   <div class="uk-modal-dialog uk-modal-body">
     <h2 class="uk-modal-title">提示</h2>
@@ -108,25 +119,29 @@
       headers: {'Authorization': 'Bearer ' + token}
     }),$.ajax({
       url: encodeURI("https://www.zzyun.co/client/memcached.json"),
-    })).done(function(res1,res2){
-
-    });
-    $.ajax({
-      url: encodeURI("http://61.175.122.154:7988/wp-json/wp/v2/posts?categories=3"),
       type: 'GET',
-      dataType: 'json',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
-      success: function (posts) {
-        for (var i = 0; i < posts.length; i++) {
-          var obj = posts[i];
-          if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {
-            var title = obj['title']['rendered'];
-            var res = obj['content']['rendered'].match(/[0-9\.]+/g);
-          }
+      dataType: 'json'
+    })).done(function(posts,memcached){
+      for (var i = 0; i < posts.length; i++) {
+        var obj = posts[i];
+        if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {
+          var title = obj['title']['rendered'];
+          var res = obj['content']['rendered'].match(/[0-9\.]+/g);
+          var host = res[0];
+          var port = res[1];
+          $.ajax({
+            url: "http://localhost:1078/test/memcached",
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(memcached)
+          }).always(function(res){
+            if(res.status===1){
+              connect(title,host,port,"memcached",res.ip);
+            }else{
+              $("#finding-modal-body").html("无可用的中继通道");
+            }
+          });
         }
-        $("#my-loader").css("display","none");
       }
     });
   })();

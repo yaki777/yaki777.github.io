@@ -25,17 +25,6 @@
 
   </div>
 </div>
-<div id="finding-modal" class="uk-modal">
-  <div class="uk-modal-dialog uk-modal-body">
-    <h2 class="uk-modal-title">提示</h2>
-    <div id="finding-modal-body">
-      正在寻找合适的中继通道<div uk-spinner></div>
-    </div>
-    <p class="uk-text-right">
-      <button class="uk-button uk-button-default uk-modal-close" type="button">确定</button>
-    </p>
-  </div>
-</div>
 <div id="connecting-modal" class="uk-modal">
   <div class="uk-modal-dialog uk-modal-body">
     <h2 class="uk-modal-title">提示</h2>
@@ -154,6 +143,8 @@
   }
 
   function nodeTest(name,host,port,type,nodes){
+    $("#connecting-modal-body").html("正在寻找合适的中继通道<div uk-spinner></div>");
+    UIkit.modal($("#connecting-modal")).show();
     $.ajax({
       url:"http://localhost:1078/test/"+type,
       type: 'POST',
@@ -161,9 +152,9 @@
       data: JSON.stringify(nodes)
     }).always(function(res){
       if(res.status===1){
-        connect(name,host,port,"redis",res.ip);
+        connect(name,host,port,type,res.ip);
       }else{
-        $("#finding-modal-body").html("无可用的中继通道");
+        $("#connecting-modal-body").html("无可用的中继通道");
       }
     })
   }
@@ -177,7 +168,6 @@
       }
     });
     $("#connecting-modal-body").html("正在连接<div uk-spinner></div>");
-    UIkit.modal($("#connecting-modal")).show();
   }
 </script>
 </body>

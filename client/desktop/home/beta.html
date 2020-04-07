@@ -73,39 +73,44 @@
         alert(data)
       }
     });
-    $.ajax({
+    $.when($.ajax({
       url: encodeURI("http://61.175.122.154:7988/wp-json/wp/v2/posts?categories=3"),
       type: 'GET',
       dataType: 'json',
       headers: {'Authorization': 'Bearer ' + token}
-    }).always(function(posts){
-      for (var i = 0; i < posts.length; i++) {
-        var obj = posts[i];
-        if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {
-          var title = obj['title']['rendered'];
-          var res = obj['content']['rendered'].match(/[0-9\.]+/g);
-          var host = res[0];
-          var port = res[1];
-          createCard(title,host,port,"memcached");
-        }
-      }
-    });
-    $.ajax({
+    }),$.ajax({
       url: encodeURI("http://61.175.122.154:7988/wp-json/wp/v2/posts?categories=2"),
       type: 'GET',
       dataType: 'json',
       headers: {'Authorization': 'Bearer ' + token}
-    }).always(function(posts){
-      for (var i = 0; i < posts.length; i++) {
-        var obj = posts[i];
-        if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {
-          var title = obj['title']['rendered'];
-          var res = obj['content']['rendered'].match(/[0-9\.]+/g);
-          var host = res[0];
-          var port = res[1];
-          createCard(title,host,port,"redis");
+    })).done(function(res1,res2){
+      var posts = res1[0];
+      (function() {
+        for (var i = 0; i < posts.length; i++) {
+          var obj = posts[i];
+          if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {
+            var title = obj['title']['rendered'];
+            var res = obj['content']['rendered'].match(/[0-9\.]+/g);
+            var host = res[0];
+            var port = res[1];
+            $("#list").append(createCard(title, host, port, "memcached"));
+          }
         }
-      }
+      })();
+      posts = res2[0];
+      (function() {
+        for (var i = 0; i < posts.length; i++) {
+          var obj = posts[i];
+          if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {
+            var title = obj['title']['rendered'];
+            var res = obj['content']['rendered'].match(/[0-9\.]+/g);
+            var host = res[0];
+            var port = res[1];
+            $("#list").append(createCard(title, host, port, "redis"));
+          }
+        }
+      })();
+      $("#my-loader").css("display","none");
     });
   })();
 

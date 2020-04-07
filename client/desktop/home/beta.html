@@ -121,7 +121,9 @@
       url: encodeURI("https://www.zzyun.co/client/memcached.json"),
       type: 'GET',
       dataType: 'json'
-    })).done(function(posts,memcached){
+    })).done(function(res1,res2){
+      var posts = res1[0];
+      var memcached = res2[0];
       for (var i = 0; i < posts.length; i++) {
         var obj = posts[i];
         if ((new Date()) - (new Date(obj['modified'])) < 6 * 60 * 1000) {

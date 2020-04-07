@@ -138,11 +138,7 @@
           type: 'GET',
           dataType: 'json'
         }).always(function(res){
-          if(res.status===1){
-            connect(name,host,port,"memcached",res.ip);
-          }else{
-            $("#finding-modal-body").html("无可用的中继通道");
-          }
+          nodeTest(name,host,port,type,res);
         });
         break;
       case "redis":
@@ -151,16 +147,26 @@
           type: 'GET',
           dataType: 'json'
         }).always(function(res){
-          if(res.status===1){
-            connect(name,host,port,"redis",res.ip);
-          }else{
-            $("#finding-modal-body").html("无可用的中继通道");
-          }
+          nodeTest(name,host,port,type,res);
         });
         break;
     }
   }
 
+  function nodeTest(name,host,port,type,nodes){
+    $.ajax({
+      url:"http://localhost:1078/test/"+type,
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(nodes)
+    }).always(function(res){
+      if(res.status===1){
+        connect(name,host,port,"redis",res.ip);
+      }else{
+        $("#finding-modal-body").html("无可用的中继通道");
+      }
+    })
+  }
 
   function connect(name, host, port, type, next) {
     $.get("http://localhost:1078/connect?token=" + token + "&host=" + host + "&port=" + port + "&type="+type+"&name=" + name + "&client-next=" + next, function (data) {

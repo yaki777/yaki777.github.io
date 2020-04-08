@@ -163,7 +163,7 @@
           }
         }
       })();
-      $("#my-loader").css("display","none");
+      $("#my-loading").css("display","none");
     });
     $("#connecting").on('hidden.bs.modal', function(){
       $('#connecting-body').html("正在连接<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span><span class=\"sr-only\">Loading...</span>");
@@ -208,7 +208,7 @@
   }
 
   function nodeTest(name,host,port,type,nodes){
-    $("#connecting-modal-body").html("正在寻找合适的中继通道,大约需要10s左右");
+    $("#connecting-body").html("正在寻找合适的中继通道,大约需要10s左右");
     $('#connecting').modal();
     $.ajax({
       url:"http://localhost:1078/test/"+type,

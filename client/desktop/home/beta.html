@@ -24,12 +24,40 @@
   <div id="list" class="uk-grid">
 
   </div>
+  <div>
+    <button class="uk-button uk-button-default">设置</button>
+  </div>
 </div>
 <div id="connecting-modal" class="uk-modal">
   <div class="uk-modal-dialog uk-modal-body">
     <h2 class="uk-modal-title">提示</h2>
     <div id="connecting-modal-body">
       正在连接<div uk-spinner></div>
+    </div>
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="UIkit.modal($('#setting-modal')).show()">确定</button>
+    </p>
+  </div>
+</div>
+<div id="setting-modal" class="uk-modal">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">设置</h2>
+    <div>
+      <div class="uk-margin">
+        <input id="connection_default" class="uk-input" type="text" placeholder="默认请求数(2)">
+      </div>
+      <div class="uk-margin">
+        <input id="connection_mag" class="uk-input" type="text" placeholder="请求倍数(2)">
+      </div>
+      <div class="uk-margin">
+        <input id="connection_max" class="uk-input" type="text" placeholder="最大请求数(8)">
+      </div>
+      <div class="uk-margin">
+        <input id="connection_delay" class="uk-input" type="text" placeholder="请求间隔(10)ms">
+      </div>
+      <div class="uk-margin">
+        <input id="connection_lag_limit" class="uk-input" type="text" placeholder="最大延迟(300)ms">
+      </div>
     </div>
     <p class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close" type="button">确定</button>
@@ -169,6 +197,37 @@
       }
     });
     $("#connecting-modal-body").html("正在连接<div uk-spinner></div>");
+  }
+
+  function setting(){
+    var connection_default = $('#connection_default').val();
+    var connection_mag = $('#connection_mag').val();
+    var connection_max = $('#connection_max').val();
+    var connection_delay = $('#connection_delay').val();
+    var connection_lag_limit = $('#connection_lag_limit').val();
+    var data = {};
+    if(connection_default && connection_default.length>0){
+      data['connection_default'] = Number(connection_default);
+    }
+    if(connection_mag && connection_mag.length>0){
+      data['connection_mag'] = Number(connection_mag);
+    }
+    if(connection_max && connection_max.length>0){
+      data['connection_max'] = Number(connection_max);
+    }
+    if(connection_delay && connection_delay.length>0){
+      data['connection_delay'] = Number(connection_delay);
+    }
+    if(connection_lag_limit && connection_lag_limit.length>0){
+      data['connection_lag_limit'] = Number(connection_lag_limit);
+    }
+    $.ajax({
+      url:'http://localhost:1078/settings/',
+      type: 'POST',
+      dataType: 'json',
+      contentType:'application/json',
+      data:JSON.stringify(data)
+    }).always(function(res){});
   }
 </script>
 </body>

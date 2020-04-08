@@ -55,6 +55,20 @@
     </p>
   </div>
 </div>
+<div id="update-modal" class="uk-modal">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">有新版本</h2>
+    <div class="uk-margin">
+      <p>Linux(deb): http://61.175.122.154:7988/download/beta1.0.deb</p>
+      <p>Linux(rpm): http://61.175.122.154:7988/download/beta1.0.rpm</p>
+      <p>Windows: http://61.175.122.154:7988/download/beta1.0.zip</p>
+      <p>Android: http://61.175.122.154:7988/download/beta1.0.apk</p>
+    </div>
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="register()">确定</button>
+    </p>
+  </div>
+</div>
 <script src="https://lib.baomitu.com/uikit/3.2.3/js/uikit.min.js"></script>
 <script src="https://lib.baomitu.com/uikit/3.2.3/js/uikit-icons.min.js"></script>
 <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -90,6 +104,23 @@
       $("#password").val(pass);
       login()
     }
+    $.ajax({
+      url:"http://localhost:1078/test/redis",
+      type: 'HEAD',
+      dataType: 'json',
+      timeout: 500,
+      statusCode:{
+        500:function(data){
+          console.log(500);
+        },
+        404: function(data){
+          console.log(404);
+        }
+      },
+      error:function(data){
+        console.log(data)
+      }
+    })
   })();
 
   function login() {

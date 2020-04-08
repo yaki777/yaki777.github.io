@@ -62,7 +62,7 @@
     <p>理论最大速度计算公式： 最大请求数*(1000/请求间隔)kb</p>
     <p>最大延迟：当检测到实际延迟超过设定的最大延迟后,减小请求数到默认请求数</p>
     <p class="uk-text-right">
-      <button class="uk-button uk-button-default uk-modal-close" type="button">确定</button>
+      <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="setting()">确定</button>
     </p>
   </div>
 </div>
@@ -224,7 +224,7 @@
       data['connection_lag_limit'] = Number(connection_lag_limit);
     }
     $.ajax({
-      url:'http://localhost:1078/settings/',
+      url:'http://localhost:1078/settings',
       type: 'POST',
       dataType: 'json',
       contentType:'application/json',

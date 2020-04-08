@@ -25,7 +25,7 @@
 
   </div>
   <div>
-    <button class="uk-button uk-button-default">设置</button>
+    <button class="uk-button uk-button-default" onclick="UIkit.modal($('#setting-modal')).show()">设置</button>
   </div>
 </div>
 <div id="connecting-modal" class="uk-modal">
@@ -35,7 +35,7 @@
       正在连接<div uk-spinner></div>
     </div>
     <p class="uk-text-right">
-      <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="UIkit.modal($('#setting-modal')).show()">确定</button>
+      <button class="uk-button uk-button-default uk-modal-close" type="button">确定</button>
     </p>
   </div>
 </div>

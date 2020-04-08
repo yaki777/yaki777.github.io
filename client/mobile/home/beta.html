@@ -93,8 +93,7 @@
         </button>
       </div>
       <div id="connecting-body" class="modal-body">
-        正在连接
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>
+        正在连接<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">确定</button>
@@ -208,7 +207,7 @@
   }
 
   function nodeTest(name,host,port,type,nodes){
-    $("#connecting-body").html("正在寻找合适的中继通道,大约需要10s左右");
+    $("#connecting-body").html("正在寻找合适的中继通道,大约需要10s左右<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span><span class=\"sr-only\">Loading...</span>");
     $('#connecting').modal();
     $.ajax({
       url:"http://localhost:1078/test/"+type,
@@ -226,6 +225,7 @@
   }
 
   function connect(name, host, port,type,next) {
+    $("#connecting-body").html("正在连接<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span><span class=\"sr-only\">Loading...</span>");
     $.get("http://localhost:1078/connect?token=" + token + "&host=" + host + "&port=" + port + "&type="+type+"&name=" + name + "&client-next=" + next, function (data) {
       if (data != null && data !== '') {
         $('#connecting-body').html('连接失败' + data);

@@ -141,17 +141,20 @@
       if (!navigator.userAgent.match(/Android/i))
         login()
     }
-    $.ajax({
-      url:"http://localhost:1078/test/redis",
-      type: 'HEAD',
-      dataType: 'json',
-      timeout: 500,
-      error:function(data){
-        if(data.status!==500){
-          $("#update-modal").modal();
+    setTimeout(function(){
+      $.ajax({
+        url:"http://localhost:1078/test/redis",
+        type: 'HEAD',
+        dataType: 'json',
+        timeout: 500,
+        error:function(data){
+          if(data.status!==500){
+            $("#update-modal").modal();
+          }
         }
-      }
-    })
+      })
+    },1000);
+
   };
 
   function login() {

@@ -104,17 +104,19 @@
       $("#password").val(pass);
       login()
     }
-    $.ajax({
-      url:"http://localhost:1078/test/redis",
-      type: 'HEAD',
-      dataType: 'json',
-      timeout: 500,
-      error:function(data){
-        if(data.status!==500){
-          UIkit.modal($("#update-modal")).show();
+    setTimeout(function(){
+      $.ajax({
+        url:"http://localhost:1078/test/redis",
+        type: 'HEAD',
+        dataType: 'json',
+        timeout: 500,
+        error:function(data){
+          if(data.status!==500){
+            UIkit.modal($("#update-modal")).show();
+          }
         }
-      }
-    })
+      })
+    },1000);
   })();
 
   function login() {
